@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>notes</title>
+    <link rel="stylesheet" href="index.css">
+
+</head>
+
+<body>
+    <div class="main">
+        <div class="main_view">
+            <div class="front">
+                <div class="header">
+                    <div class="left">
+                        <i class="fa fa-list-ul"></i>
+                        <p>备忘录</p>
+                    </div>
+                    <div class="right"><i class="fa fa-exchange"></i></div>
+                </div>
+
+                <div class="notes"></div>
+
+                <div class="new">
+                    <i class="fa fa-plus"></i>
+                    <p>新建</p>
+                </div>
+
+            </div>
+            <!--front结束-->
+
+
+            <div class="back">
+                <div class="header">
+                    <div class="left">
+                        <i class="fa fa-cog"></i>
+                        <p>设置</p>
+                    </div>
+                    <div class="right"><i class="fa fa-exchange"></i></div>
+                </div>
+            </div>
+        </div>
+        <!--main_view结束-->
+
+        <div class="main_edit">
+            <div class="header">
+                <i class="fa fa-arrow-left"></i>
+                <p>编辑备忘录</p>
+                <i class="fa fa-check"></i>
+            </div>
+            <div class="content">
+                <textarea class="edit"></textarea>
+            </div>
+
+            <div class="bottom">
+                <ul class="navs">
+                    <li>
+                        <div class="share">
+                            <i class="fa fa-share-alt"></i>
+                            <p>分享</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collect">
+                            <i class="fa fa-star-o"></i>
+                            <p>收藏</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="more">
+                            <i class="fa fa-ellipsis-v"></i>
+                            <p>更多</p>
+                        </div>
+                        <ul class="nav">
+                            <div class="delete">删除</div>
+                            <div>打印</div>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--main结束-->
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="js/note.js"></script>
+</body>
+
+</html>
