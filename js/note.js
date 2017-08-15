@@ -6,18 +6,22 @@
 
         //用app对象的属性来存储DOM元素，this就是app
         init() {
+            if (!localStorage.getItem(this.LOCAL_STORAGE_KEY)) { localStorage.setItem(this.LOCAL_STORAGE_KEY, '[]') };//处理本地数据为空等异常情况
+            this.notes = Array.isArray(JSON.parse(localStorage.getItem(this.LOCAL_STORAGE_KEY))) ? JSON.parse(localStorage.getItem(this.LOCAL_STORAGE_KEY)) : [];
+            //this.notes = JSON.parse(localStorage.getItem(this.LOCAL_STORAGE_KEY)) || [];
 
-            this.notes = JSON.parse(localStorage.getItem(this.LOCAL_STORAGE_KEY)) || [];
             this.selectedIndex = null;
             this.$el = document.querySelector('.main');
 
-            this.$el.addEventListener('click', this, false); //對象作為時間監聽器
+            this.$el.addEventListener('click', this, false); //對象作為事件監聽器
             this.$main = this.$el.querySelector('.main_view');
             this.$main_edit = this.$el.querySelector('.main_edit');
             this.$notes = this.$el.querySelector('.notes');
             this.$edit = this.$el.querySelector('.edit');
             this.$check = this.$el.querySelector('.fa.fa-check');
             this.$bottom = this.$el.querySelector('.bottom');
+            this.$more = this.$el.querySelector('.more');
+            this.$nav = this.$el.querySelector('.nav');
             this.render();
         },
 
@@ -45,6 +49,12 @@
                 case target.matches('.delete'):
                     this.trash();
                     break;
+                case target.matches('.edit'):
+                    this.edit();
+                    break;
+                case target.matches('.more'):
+                    this.more();
+                    break;
             }
         },
 
@@ -67,6 +77,7 @@
             this.$main_edit.classList.add('push');
             this.$bottom.style.visibility = 'hidden';
             this.$edit.value = '';
+            this.edit();
         },
 
 
@@ -85,16 +96,15 @@
 
             this.$main_edit.classList.remove('push');
             this.$edit.value = '';
-            // this.save();
-            // this.render();
         },
 
         //点击√保存页面
         check() {
             if (this.selectedIndex === null && this.$edit.value.length > 0) {
                 this.notes.push({ text: this.$edit.value });
-            } else if( this.selectedIndex !== null && this.$edit.value.length === 0) {
-                this.notes.splice(this.selectedIndex,1);
+                this.selectedIndex = this.notes.length-1;
+            } else if (this.selectedIndex !== null && this.$edit.value.length === 0) {
+                this.notes.splice(this.selectedIndex, 1);
             } else {
                 this.notes[this.selectedIndex].text = this.$edit.value;
             }
@@ -104,10 +114,34 @@
             this.render();
         },
 
+        //点击edit的时候√出现
+        edit() {
+            this.$edit.focus();
+            this.$edit.addEventListener('keyup', function () {
+                if (app.selectedIndex !== null) {
+                    if (app.notes[app.selectedIndex].text === app.$edit.value) {
+                        app.$check.style.visibility = 'hidden';
+                    } else {
+                        app.$check.style.visibility = 'visible';
+                    }
+                }
+            });
+        },
+
+        //点击更多的时候弹出对话框，点击其他地方的时候对话框消失
+        // more() {
+        //     this.$more.addEventListener('click',function(){
+        //         app.$nav.style.display = 'block';
+        //     });
+        //     this.$more.addEventListener('click',function(){
+        //         app.$nav.style.display = 'none';
+        //     });
+        // },
+
         //删除备忘录
         trash() {
-            if(!confirm('是否删除此备忘录？')) return;
-            this.notes.splice(this.selectedIndex,1);
+            if (!confirm('是否删除此备忘录？')) return;
+            this.notes.splice(this.selectedIndex, 1);
             this.save();
             this.render();
             this.$main_edit.classList.remove('push');
