@@ -13,7 +13,7 @@
             this.selectedIndex = null;
             this.$el = document.querySelector('.main');
 
-            this.$el.addEventListener('click', this, false); //對象作為事件監聽器
+            this.$el.addEventListener('click', this); //對象作為事件監聽器
             this.$main = this.$el.querySelector('.main_view');
             this.$main_edit = this.$el.querySelector('.main_edit');
             this.$notes = this.$el.querySelector('.notes');
@@ -22,11 +22,15 @@
             this.$bottom = this.$el.querySelector('.bottom');
             this.$more = this.$el.querySelector('.more');
             this.$nav = this.$el.querySelector('.nav');
+            this.$list = this.$el.querySelector('.fa.fa-list-ul');
             this.render();
         },
 
         handleEvent(evet) {
             let target = event.target;
+            if(target !== app.$nav && target !== app.$more){
+                app.$nav.classList.remove('show');
+            }
             switch (true) {
                 case target.matches('.back .fa.fa-exchange'):
                     this.home();
@@ -52,8 +56,18 @@
                 case target.matches('.edit'):
                     this.edit();
                     break;
-                case target.matches('.more'):
+                case target.matches('.more') || target.parentElement.matches('.more'):
                     this.more();
+                    break;
+                // case !target.matches('.nav'):
+                //     this.more();
+                //     console.log('a');
+                //     break;
+                case target.matches('.fa.fa-list-ul'):
+                    this.list();
+                    break;
+                case target.matches('.fa.fa-th-large'):
+                    this.large();
                     break;
             }
         },
@@ -102,7 +116,7 @@
         check() {
             if (this.selectedIndex === null && this.$edit.value.length > 0) {
                 this.notes.push({ text: this.$edit.value });
-                this.selectedIndex = this.notes.length-1;
+                this.selectedIndex = this.notes.length - 1;
             } else if (this.selectedIndex !== null && this.$edit.value.length === 0) {
                 this.notes.splice(this.selectedIndex, 1);
             } else {
@@ -129,14 +143,27 @@
         },
 
         //点击更多的时候弹出对话框，点击其他地方的时候对话框消失
-        // more() {
-        //     this.$more.addEventListener('click',function(){
-        //         app.$nav.style.display = 'block';
-        //     });
-        //     this.$more.addEventListener('click',function(){
-        //         app.$nav.style.display = 'none';
-        //     });
-        // },
+        more() {
+            app.$nav.classList.toggle('show'); 
+            
+                // if(app.$nav.style.display == 'none'){             
+                //     app.$nav.style.display = 'block';
+                //     console.log('bb');
+                // }else {                
+                //     app.$nav.style.display = 'none';
+                //     console.log('aa');
+                // }
+        },
+
+        list() {
+            this.$list.classList.remove('fa-list-ul');
+            this.$list.classList.add('fa-th-large');
+        },
+
+        large() {
+            this.$list.classList.remove('fa-th-large');
+            this.$list.classList.add('fa-list-ul');
+        },
 
         //删除备忘录
         trash() {
@@ -155,6 +182,7 @@
         //渲染列表
         render() {
             this.$notes.innerHTML = this.notes.map((note, i) => `<div class='note' data-index='${i}'>${note.text}</div>`).join('');
+            //this.$notes.innerHTML = this.notes.map((note, i) => `<div class='note1' data-index='${i}'>${note.text}</div>`).join('');
         },
 
     };

@@ -224,6 +224,11 @@ html {
     box-shadow: 2px 2px 5px #ccc;
 }
 
+.nav.show {
+    display: block;
+}
+
+
 .nav div {
     cursor: pointer;
     /*width: 85px;*/
@@ -237,7 +242,12 @@ html {
     border-bottom: 1px solid #ccc;
 }
 
-.navs>li:hover .nav {
+/*.navs>li:hover .nav {
     display: block;
-}
+}*/
+
+ .fa.fa-th-large {
+     font-size: 26px;
+     color: #009DFE;
+ }
 
