@@ -23,12 +23,15 @@
             this.$more = this.$el.querySelector('.more');
             this.$nav = this.$el.querySelector('.nav');
             this.$list = this.$el.querySelector('.fa.fa-list-ul');
+            this.$large = this.$el.querySelector('.fa.fa-th-large');
+            this.$note = this.$el.querySelector('.note');
             this.render();
+            
         },
 
         handleEvent(evet) {
             let target = event.target;
-            if(target !== app.$nav && target !== app.$more){
+            if (target !== app.$nav && target !== app.$more && target.parentElement !== app.$more) {
                 app.$nav.classList.remove('show');
             }
             switch (true) {
@@ -59,10 +62,6 @@
                 case target.matches('.more') || target.parentElement.matches('.more'):
                     this.more();
                     break;
-                // case !target.matches('.nav'):
-                //     this.more();
-                //     console.log('a');
-                //     break;
                 case target.matches('.fa.fa-list-ul'):
                     this.list();
                     break;
@@ -144,25 +143,34 @@
 
         //点击更多的时候弹出对话框，点击其他地方的时候对话框消失
         more() {
-            app.$nav.classList.toggle('show'); 
-            
-                // if(app.$nav.style.display == 'none'){             
-                //     app.$nav.style.display = 'block';
-                //     console.log('bb');
-                // }else {                
-                //     app.$nav.style.display = 'none';
-                //     console.log('aa');
-                // }
+            app.$nav.classList.toggle('show');
+
+            // if (app.$nav.style.display == 'none') {
+            //     app.$nav.style.display = 'block';
+            // } else {
+            //     app.$nav.style.display = 'none';
+            // }
         },
+        //用if的時候要在html对应的nav裡面加style="display:none" ，不能再css裡面加，如果加載css裡面會第一次点击的時候會沒反应第二次才有出來
 
         list() {
-            this.$list.classList.remove('fa-list-ul');
-            this.$list.classList.add('fa-th-large');
+            this.$large.style.display = 'block';
+            this.$list.style.display = 'none';
+            this.$notes.classList.toggle('notesone');
+            //this.$note.classList.toggle('note1');
+            this.$notes.querySelectorAll('.note').forEach(function(note){
+                note.classList.add('note1');
+            })
         },
 
         large() {
-            this.$list.classList.remove('fa-th-large');
-            this.$list.classList.add('fa-list-ul');
+            this.$large.style.display = 'none';
+            this.$list.style.display = 'block';
+            this.$notes.classList.remove('notesone');
+            //this.$note.classList.remove('note1');
+            this.$notes.querySelectorAll('.note').forEach(function(note){
+                note.classList.remove('note1');
+            });
         },
 
         //删除备忘录
@@ -182,7 +190,7 @@
         //渲染列表
         render() {
             this.$notes.innerHTML = this.notes.map((note, i) => `<div class='note' data-index='${i}'>${note.text}</div>`).join('');
-            //this.$notes.innerHTML = this.notes.map((note, i) => `<div class='note1' data-index='${i}'>${note.text}</div>`).join('');
+
         },
 
     };
@@ -193,3 +201,4 @@
 
     window.app = app;
 })();
+
