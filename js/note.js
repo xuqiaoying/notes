@@ -3,14 +3,16 @@
     let app = {
 
         LOCAL_STORAGE_KEY: 'notes',
+        LOCAL_STORAGE_MODE:'mode',
 
         //用app对象的属性来存储DOM元素，this就是app
         init() {
             if (!localStorage.getItem(this.LOCAL_STORAGE_KEY)) { localStorage.setItem(this.LOCAL_STORAGE_KEY, '[]') };//处理本地数据为空等异常情况
             this.notes = Array.isArray(JSON.parse(localStorage.getItem(this.LOCAL_STORAGE_KEY))) ? JSON.parse(localStorage.getItem(this.LOCAL_STORAGE_KEY)) : [];
-            //this.notes = JSON.parse(localStorage.getItem(this.LOCAL_STORAGE_KEY)) || [];
+            this.mode = JSON.parse(localStorage.getItem(this.LOCAL_STORAGE_MODE)) || 1;
 
             this.selectedIndex = null;
+            //this.mode = 1;
             this.$el = document.querySelector('.main');
 
             this.$el.addEventListener('click', this); //對象作為事件監聽器
@@ -25,8 +27,13 @@
             this.$list = this.$el.querySelector('.fa.fa-list-ul');
             this.$large = this.$el.querySelector('.fa.fa-th-large');
             this.$note = this.$el.querySelector('.note');
+            if(this.mode ===2){
+                this.$notes.classList.add('notesone');
+                this.$list.style.display= 'none';
+                this.$large.style.display= 'block';
+            }
             this.render();
-            
+
         },
 
         handleEvent(evet) {
@@ -91,6 +98,7 @@
             this.$bottom.style.visibility = 'hidden';
             this.$edit.value = '';
             this.edit();
+            this.render();
         },
 
 
@@ -158,9 +166,11 @@
             this.$list.style.display = 'none';
             this.$notes.classList.toggle('notesone');
             //this.$note.classList.toggle('note1');
-            this.$notes.querySelectorAll('.note').forEach(function(note){
+            this.$notes.querySelectorAll('.note').forEach(function (note) {
                 note.classList.add('note1');
-            })
+            });
+            this.mode = 2;
+            this.save();
         },
 
         large() {
@@ -168,37 +178,50 @@
             this.$list.style.display = 'block';
             this.$notes.classList.remove('notesone');
             //this.$note.classList.remove('note1');
-            this.$notes.querySelectorAll('.note').forEach(function(note){
+            this.$notes.querySelectorAll('.note').forEach(function (note) {
                 note.classList.remove('note1');
             });
+            this.mode = 1;
+            this.save();
         },
 
         //删除备忘录
         trash() {
             if (!confirm('是否删除此备忘录？')) return;
             this.notes.splice(this.selectedIndex, 1);
+            this.$main_edit.classList.remove('push');
             this.save();
             this.render();
-            this.$main_edit.classList.remove('push');
         },
 
         //保存頁面
         save() {
             localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this.notes));
+            localStorage.setItem(this.LOCAL_STORAGE_MODE, JSON.stringify(this.mode));
         },
 
         //渲染列表
         render() {
-            this.$notes.innerHTML = this.notes.map((note, i) => `<div class='note' data-index='${i}'>${note.text}</div>`).join('');
+            this.$notes.innerHTML = this.notes.map( (note, i) =>{
+                if (this.mode === 1) {
+                    return `<div class='note' data-index='${i}'>${note.text}</div>`;
+                } else {
+                    return `<div class='note note1' data-index='${i}'>${note.text}</div>`;
+                }
+            }).join('');
 
+
+            // if(this.$notes.classList.contains('notesone')){
+            //     this.$notes.querySelectorAll('.note').forEach(function(note){
+            //         note.classList.add('note1');
+            //     })
+            // }
         },
-
     };
 
     document.addEventListener('DOMContentLoaded', function () {
         app.init();
     });
-
     window.app = app;
 })();
 
