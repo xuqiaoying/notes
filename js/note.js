@@ -75,6 +75,7 @@
                     break;
                 case target.matches('.con_delete'):
                     this.notes.splice(this.selectedIndex, 1);
+                    this.$confirm.style.display = 'none';
                     this.save();
                     this.render();
                     this.$main_edit.classList.remove('push');
