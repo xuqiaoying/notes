@@ -123,13 +123,25 @@ html {
     border-bottom: 1px solid #d6d6d6;
     height: 45px;
     line-height: 45px;
-    padding: 2px;
+    /*padding: 2px;*/
     margin-left: 15px;
     margin-right: 15px;
     max-width: calc(100% - 30px);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    position: relative;
+}
+
+.notes .note .noteText{
+    position: absolute;
+    top: -5px;
+}
+.notes .note .noteData{
+    position: absolute;
+    bottom: -16px;
+    font-size: 12px;
+    color: #bbb;
 }
 
 .notes.notesone {
@@ -273,3 +285,44 @@ html {
     left: 10px;
     display: none;
  }
+ .confirm{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 85px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin: 0px -3px 0px 0px;;
+    background-color: #fff;
+    
+ }
+ .confirm p{
+    text-align: center;
+    font-size: 16px;
+    margin: 10px;
+ }
+.confirm .button{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.confirm .button .cancel{
+    width: 75px;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 14px;
+    color: #009DFE;
+}
+.confirm .button .con_delete {
+    width: 75px;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 14px;
+    color: red;
+}

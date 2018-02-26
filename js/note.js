@@ -27,6 +27,7 @@
             this.$list = this.$el.querySelector('.fa.fa-list-ul');
             this.$large = this.$el.querySelector('.fa.fa-th-large');
             this.$note = this.$el.querySelector('.note');
+            this.$confirm = this.$el.querySelector('.confirm');
             if(this.mode ===2){
                 this.$notes.classList.add('notesone');
                 this.$list.style.display= 'none';
@@ -57,17 +58,26 @@
                 case target.matches('.fa.fa-check'):
                     this.check();
                     break;
-                case target.matches('.note'):
+                case target.matches('.note') || target.matches('.note .noteText') || target.matches('.note .noteData'): console.log(target)
                     this.view(event);
                     break;
                 case target.matches('.delete'):
-                    this.trash();
+                    this.trash(event);
                     break;
                 case target.matches('.edit'):
                     this.edit();
                     break;
                 case target.matches('.more') || target.parentElement.matches('.more'):
                     this.more();
+                    break;
+                case target.matches('.cancel'):
+                    this.$confirm.style.display = 'none';
+                    break;
+                case target.matches('.con_delete'):
+                    this.notes.splice(this.selectedIndex, 1);
+                    this.save();
+                    this.render();
+                    this.$main_edit.classList.remove('push');
                     break;
                 case target.matches('.fa.fa-list-ul'):
                     this.list();
@@ -121,8 +131,10 @@
 
         //点击√保存页面
         check() {
+            var now = new Date();
+            var nowdata = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日';
             if (this.selectedIndex === null && this.$edit.value.length > 0) {
-                this.notes.push({ text: this.$edit.value });
+                this.notes.push({ text: this.$edit.value, data: nowdata });
                 this.selectedIndex = this.notes.length - 1;
             } else if (this.selectedIndex !== null && this.$edit.value.length === 0) {
                 this.notes.splice(this.selectedIndex, 1);
@@ -187,11 +199,12 @@
 
         //删除备忘录
         trash() {
-            if (!confirm('是否删除此备忘录？')) return;
-            this.notes.splice(this.selectedIndex, 1);
-            this.$main_edit.classList.remove('push');
-            this.save();
-            this.render();
+            this.$confirm.style.display = 'block';
+            // if (!confirm('是否删除此备忘录？')) return;
+            // this.notes.splice(this.selectedIndex, 1);
+            // this.$main_edit.classList.remove('push');
+            // this.save();
+            // this.render();
         },
 
         //保存頁面
@@ -204,9 +217,15 @@
         render() {
             this.$notes.innerHTML = this.notes.map( (note, i) =>{
                 if (this.mode === 1) {
-                    return `<div class='note' data-index='${i}'>${note.text}</div>`;
+                    return `<div class='note' data-index='${i}'>
+                        <div class='noteText' data-index='${i}'>${note.text}</div>
+                        <div class='noteData' data-index='${i}'>${note.data}</div>
+                    </div>`;
                 } else {
-                    return `<div class='note note1' data-index='${i}'>${note.text}</div>`;
+                    return `<div class='note note1' data-index='${i}'>
+                        <div class='noteText' data-index='${i}'>${note.text}</div>
+                        <div class='noteData' data-index='${i}'>${note.data}</div>
+                    </div>`;
                 }
             }).join('');
 
